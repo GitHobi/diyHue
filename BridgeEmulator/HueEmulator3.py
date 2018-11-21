@@ -86,10 +86,13 @@ def updateConfig():
                 elif bridge_config["lights"][light]["type"] == "Dimmable light":
                     bridge_config["lights"][light].update({"manufacturername": "Philips", "modelid": "LWB010", "uniqueid": "00:17:88:01:00:" + hex(random.randrange(0,255))[2:] + ":" + hex(random.randrange(0,255))[2:] + ":" + hex(random.randrange(0,255))[2:] + "-0b", "swversion": "1.15.0_r18729"})
     #fix timezones bug
-    if "values" not in bridge_config["capabilities"]["timezones"]:
-        timezones = bridge_config["capabilities"]["timezones"]
-        del bridge_config["capabilities"]["timezones"]
-        bridge_config["capabilities"]["timezones"] = {"values": timezones}
+    try:
+        if "values" not in bridge_config["capabilities"]["timezones"]:
+            timezones = bridge_config["capabilities"]["timezones"]
+            del bridge_config["capabilities"]["timezones"]
+            bridge_config["capabilities"]["timezones"] = {"values": timezones}
+    except Exception as e:
+            logging.debug(str(e))            
 
 def entertainmentService():
     serverSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)

@@ -1,3 +1,5 @@
+from math import log
+
 def convert_rgb_xy(red,green,blue):
     red = pow((red + 0.055) / (1.0 + 0.055), 2.4) if red > 0.04045 else red / 12.92
     green = pow((green + 0.055) / (1.0 + 0.055), 2.4) if green > 0.04045 else green / 12.92
@@ -12,6 +14,25 @@ def convert_rgb_xy(red,green,blue):
     x = X / (X + Y + Z)
     y = Y / (X + Y + Z)
     return [x, y]
+
+def convert_ct ( ct_value, bri ):
+
+    hectemp = 10000 / ct_value
+    if hectemp <= 66:
+        r = 255
+        g = 99.4708025861 * log(hectemp) - 161.1195681661
+        b = 0 if hectemp <= 19 else (138.5177312231 * log(hectemp - 10) - 305.0447927307)
+    else:
+        r = 329.698727446 * pow(hectemp - 60, -0.1332047592)
+        g = 288.1221695283 * pow(hectemp - 60, -0.0755148492)
+        b = 255
+  
+    r = 255 if r > 255 else r
+    g = 255 if g > 255 else g
+    b = 255 if b > 255 else b
+
+    brightness = bri
+    return [int(r * (brightness  / 255.0)), int(g * (brightness / 255.0)) , int(b * (brightness / 255.0))]
 
 def convert_xy(x, y, bri): #needed for milight hub that don't work with xy values
     X = x
